@@ -27,7 +27,6 @@ public class CheckerHandler implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         BlockChecker checker = BlockChecker.getBlockChecker(e.getPlayer());
         checker.runBlockChecker();
-        e.getPlayer().sendMessage("t");
     }
 
     @EventHandler

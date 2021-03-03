@@ -25,13 +25,15 @@ public class BlockChecker {
             return blockCheckers.get(p);
         }
         else {
-            return new BlockChecker(p);
+            BlockChecker checker = new BlockChecker(p);
+            blockCheckers.put(p, checker);
+            return checker;
         }
     }
 
     public void runBlockChecker() {
         lastBlock = player.getLocation();
-        BukkitRunnable blockChecker = new BukkitRunnable() {
+        runnable = new BukkitRunnable() {
             public void run() {
                 Location loc = player.getPlayer().getLocation();
                 loc.setY((int) loc.getY());
@@ -41,8 +43,7 @@ public class BlockChecker {
                 setLastStoodBlock(loc);
             }
         };
-        runnable = blockChecker;
-        blockChecker.runTaskTimer(pl, 0, 1);
+        runnable.runTaskTimer(pl, 0, 1);
     }
 
     public void cancelBlockChecker() {
