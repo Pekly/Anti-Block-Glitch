@@ -1,6 +1,6 @@
 main: me.Ice.antiblockglitch.Anticheat
 name: SnociStreams
-version: 1.0
+version: 1.0.1
 author: Ice
 api-version: 1.16
 depends: [WorldEdit, WorldGuard]
