@@ -30,7 +30,7 @@ public class BlockChecker {
     }
 
     public void runBlockChecker() {
-        Location lastBlock = player.getLocation();
+        lastBlock = player.getLocation();
         BukkitRunnable blockChecker = new BukkitRunnable() {
             public void run() {
                 Location loc = player.getPlayer().getLocation();
@@ -41,6 +41,7 @@ public class BlockChecker {
                 setLastStoodBlock(loc);
             }
         };
+        runnable = blockChecker;
         blockChecker.runTaskTimer(pl, 0, 1);
     }
 
