@@ -1,0 +1,10 @@
+main: me.Ice.antiblockglitch.Anticheat
+name: SnociStreams
+version: 1.0
+author: Ice
+api-version: 1.16
+depends: [WorldEdit, WorldGuard]
+
+permissions:
+   antiblockglitch.override:
+      description: Allows player to bypass the anti block glitch
