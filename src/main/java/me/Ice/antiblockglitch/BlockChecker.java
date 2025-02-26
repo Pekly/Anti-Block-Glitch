@@ -9,45 +9,38 @@ import java.util.HashMap;
 
 public class BlockChecker {
 
-    private static Anticheat pl = Anticheat.getInstance();
-    private static HashMap<Player, BlockChecker> blockCheckers = new HashMap<>();
-
-    private Player player;
+    private static final HashMap<Player, BlockChecker> blockCheckers = new HashMap<>();
+    private final Player player;
     private BukkitRunnable runnable;
     private Location lastBlock;
 
     private BlockChecker(Player p) {
-        player = p;
+        this.player = p;
     }
 
     public static BlockChecker getBlockChecker(Player p) {
-        if (blockCheckers.containsKey(p)) {
-            return blockCheckers.get(p);
-        }
-        else {
-            BlockChecker checker = new BlockChecker(p);
-            blockCheckers.put(p, checker);
-            return checker;
-        }
+        return blockCheckers.computeIfAbsent(p, BlockChecker::new);
     }
 
     public void runBlockChecker() {
         lastBlock = player.getLocation();
         runnable = new BukkitRunnable() {
             public void run() {
-                Location loc = player.getPlayer().getLocation();
+                Location loc = player.getLocation();
                 loc.setY((int) loc.getY());
-                if (loc.subtract(0, 1, 0).getBlock().getType().equals(Material.AIR)) {
+                if (loc.subtract(0, 1, 0).getBlock().getType() == Material.AIR) {
                     return;
                 }
                 setLastStoodBlock(loc);
             }
         };
-        runnable.runTaskTimer(pl, 0, 1);
+        runnable.runTaskTimer(Anticheat.getInstance(), 0, 1);
     }
 
     public void cancelBlockChecker() {
-        runnable.cancel();
+        if (runnable != null) {
+            runnable.cancel();
+        }
     }
 
     public Location getLastStoodBlock() {
@@ -57,5 +50,4 @@ public class BlockChecker {
     public void setLastStoodBlock(Location loc) {
         lastBlock = loc;
     }
-
 }
