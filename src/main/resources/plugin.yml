@@ -8,3 +8,7 @@ depends: [WorldEdit, WorldGuard]
 permissions:
    antiblockglitch.override:
       description: Allows player to bypass the anti block glitch
+commands:
+  antiblockreload:
+    description: Reloads the plugin config
+    permission: antiblockglitch.reload
