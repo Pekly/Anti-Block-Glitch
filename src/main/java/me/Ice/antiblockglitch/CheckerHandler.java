@@ -36,48 +36,46 @@ public class CheckerHandler implements Listener {
     }
 
     @EventHandler
-    public void onRightClick(BlockPlaceEvent e) {
+    public void onBlockPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
         if (p.hasPermission("antiblockglitch.override")) {
             return;
         }
+
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionManager manager = container.get(BukkitAdapter.adapt(p.getWorld()));
+        if (manager == null) return;
+
         Location loc = e.getBlockPlaced().getLocation();
         ApplicableRegionSet regions = manager.getApplicableRegions(BlockVector3.at(loc.getX(), loc.getY(), loc.getZ()));
         Set<ProtectedRegion> set = regions.getRegions();
+
         boolean cancel = false;
         for (ProtectedRegion rg : set) {
-            try {
-                if (rg.getFlags().get(Flags.BLOCK_PLACE) == StateFlag.State.DENY) {
-                    if (!rg.getMembers().contains(p.getUniqueId())) {
-                        cancel = true;
-                    }
-                }
-            } catch (NullPointerException ex) {
-                try {
-                    if (rg.getFlags().get(Flags.BUILD) == StateFlag.State.DENY) {
-                        if (!rg.getMembers().contains(p.getUniqueId())) {
-                            cancel = true;
-                        }
-                    }
-                } catch (NullPointerException ex1) {
+            StateFlag.State blockPlaceFlag = rg.getFlags().getOrDefault(Flags.BLOCK_PLACE, StateFlag.State.ALLOW);
+            StateFlag.State buildFlag = rg.getFlags().getOrDefault(Flags.BUILD, StateFlag.State.ALLOW);
 
+            if (blockPlaceFlag == StateFlag.State.DENY || buildFlag == StateFlag.State.DENY) {
+                if (!rg.getMembers().contains(p.getUniqueId())) {
+                    cancel = true;
+                    break;
                 }
             }
         }
+
         if (cancel) {
             e.setCancelled(true);
             e.getBlockPlaced().setType(Material.AIR);
             BlockChecker checker = BlockChecker.getBlockChecker(p);
             p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "(!) You are not allowed to place blocks here!");
-            Location block = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
-            Location lastBlock = new Location(checker.getLastStoodBlock().getWorld(), checker.getLastStoodBlock().getX(), checker.getLastStoodBlock().getY(), checker.getLastStoodBlock().getZ());
-            if (block == lastBlock) {
-                return;
+
+            Location lastBlock = checker.getLastStoodBlock();
+            if (!loc.equals(lastBlock)) {
+                Location safeLoc = lastBlock.clone().add(0, 1, 0);
+                if (!safeLoc.getBlock().getType().isSolid()) {
+                    p.teleport(safeLoc);
+                }
             }
-            p.teleport(checker.getLastStoodBlock().add(0, 1, 0));
         }
     }
-
 }
