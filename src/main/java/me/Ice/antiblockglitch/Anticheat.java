@@ -1,9 +1,12 @@
 package me.Ice.antiblockglitch;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.ChatColor;
 
 public class Anticheat extends JavaPlugin {
 
@@ -37,13 +40,16 @@ public class Anticheat extends JavaPlugin {
     public String getDenyMessage() {
         return denyMessage;
     }
+
     @Override
-public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    if (command.getName().equalsIgnoreCase("antiblockreload")) {
-        reloadConfig();
-        reloadDenyMessage();
-        sender.sendMessage(ChatColor.GREEN + "AntiBlockGlitch config reloaded!");
-        return true;
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("antiblockreload")) {
+            reloadConfig();
+            reloadDenyMessage();
+            sender.sendMessage(ChatColor.GREEN + "AntiBlockGlitch config reloaded!");
+            return true;
+        }
+        return false;
     }
-    return false;
+
 }
