@@ -76,9 +76,9 @@
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>LATEST</version>
-            <scope>provided</scope>
+            <version>7.2.7</version> <!-- Use a compatible version -->
         </dependency>
+
     </dependencies>
 
 </project>
