@@ -37,4 +37,13 @@ public class Anticheat extends JavaPlugin {
     public String getDenyMessage() {
         return denyMessage;
     }
+    @Override
+public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    if (command.getName().equalsIgnoreCase("antiblockreload")) {
+        reloadConfig();
+        reloadDenyMessage();
+        sender.sendMessage(ChatColor.GREEN + "AntiBlockGlitch config reloaded!");
+        return true;
+    }
+    return false;
 }
